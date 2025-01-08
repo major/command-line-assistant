@@ -8,7 +8,7 @@ minimum_pre_commit_version: "2.9.0"
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.7.4
+    rev: v0.8.6
     hooks:
       # Run the linter.
       - id: ruff
@@ -40,17 +40,37 @@ repos:
         stages: [manual, pre-push]
 
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.389
+    rev: v1.1.391
     hooks:
     - id: pyright
       additional_dependencies:
         - pyright[nodejs]
         - pytest
         - requests
+        - dasbus
+        - setuptools
+        - responses
         - tomli; python_version<"3.11"
+        - setuptools
 
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.21.2
+    rev: v8.22.1
     hooks:
       - id: gitleaks
         stages: [manual, pre-push]
+  - repo: https://github.com/econchick/interrogate
+    rev: 1.7.0
+    hooks:
+      - id: interrogate
+        exclude: ^(docs/conf.py|setup.py|tests/|scripts)
+        args: ["-vv", "-c", "pyproject.toml", "command_line_assistant", "--fail-under", "100"]
+        # Workaround mentioned at https://github.com/econchick/interrogate/issues/60#issuecomment-735436566
+        pass_filenames: false
+
+  - repo: local
+    hooks:
+      - id: check-for-missing-sphinx-docs
+        name: check for missing sphinx docs
+        entry: python scripts/check_sphinx_docs.py
+        language: python
+        pass_filenames: false

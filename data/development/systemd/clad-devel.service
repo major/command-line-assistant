@@ -1,0 +1,15 @@
+[Unit]
+Description=Command Line Assistant Daemon Development Service
+Documentation=https://github.com/rhel-lightspeed/command-line-assistant
+After=network.service
+
+[Service]
+PrivateTmp=yes
+RemainAfterExit=no
+ExecStart={{ EXEC_START }}
+# The environment variables here are just workarounds for local development.
+Environment="XDG_CONFIG_DIRS={{ CONFIG_FILE_PATH }}"
+Environment="DBUS_SYSTEM_BUS_ADDRESS={{ DBUS_SESSION_ADDRESS }}"
+
+[Install]
+WantedBy=default.target
